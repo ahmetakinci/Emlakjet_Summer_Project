@@ -1,0 +1,4 @@
+-------------------------------------------------------------------------------
+Test set: com.example.emlakjet_summer_project.EmlakjetSummerProjectApplicationTests
+-------------------------------------------------------------------------------
+Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 6.88 s - in com.example.emlakjet_summer_project.EmlakjetSummerProjectApplicationTests
