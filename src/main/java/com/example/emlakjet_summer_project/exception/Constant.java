@@ -10,4 +10,5 @@ public class Constant {
     public static final String PERSON_NOT_FOUND="Person not found!";
 
     public static final String ADVERT_NOT_FOUND="Advert not found!";
+    public static final String TOKEN_NOT_VALID = "Token not valid";
 }

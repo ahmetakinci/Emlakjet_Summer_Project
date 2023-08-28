@@ -1,5 +1,6 @@
 package com.example.emlakjet_summer_project.entitiy;
 
+import com.example.emlakjet_summer_project.entitiy.enums.Role;
 import com.example.emlakjet_summer_project.entitiy.enums.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -34,16 +35,20 @@ public class Person {
     @Enumerated(EnumType.STRING)
     private Status status;
 
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
     @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "advertiser")
     private List<Advert> adverts;
 
-    public Person(String name, String surName, String email, String phoneNumber, String password,Status status) {
+    public Person(String name, String surName, String email, String phoneNumber, String password,Status status,Role role) {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
         this.password = password;
         this.surName = surName;
         this.status = status;
+        this.role = role;
 
     }
 }

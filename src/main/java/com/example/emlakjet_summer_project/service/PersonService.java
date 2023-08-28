@@ -1,6 +1,8 @@
 package com.example.emlakjet_summer_project.service;
 
 import com.example.emlakjet_summer_project.entitiy.Person;
+import com.example.emlakjet_summer_project.entitiy.SecurityPerson;
+import com.example.emlakjet_summer_project.entitiy.enums.Role;
 import com.example.emlakjet_summer_project.entitiy.enums.Status;
 import com.example.emlakjet_summer_project.exception.Constant;
 import com.example.emlakjet_summer_project.exception.EmailAlreadyException;
@@ -10,13 +12,19 @@ import com.example.emlakjet_summer_project.repository.PersonRepository;
 import com.example.emlakjet_summer_project.request.CreatePersonRequest;
 import com.example.emlakjet_summer_project.response.CreatePersonResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import com.example.emlakjet_summer_project.converter.PersonConverter;
 
 @Service
 @RequiredArgsConstructor
-public class PersonService {
+public class PersonService implements UserDetailsService {
     private final PersonRepository personRepository;
+
+    private final BCryptPasswordEncoder passwordEncoder;
 
     private final PersonConverter personConverter;
 
@@ -32,8 +40,9 @@ public class PersonService {
                         request.getSurName(),
                         request.getEmail(),
                         request.getPhoneNumber(),
-                        request.getPassword(),
-                        Status.ACTIVE);
+                        passwordEncoder.encode(request.getPassword()),
+                        Status.ACTIVE,
+                        Role.USER);
         Person save = personRepository.save(person);
         return personConverter.createPersonConverter(save);
 
@@ -55,4 +64,14 @@ public class PersonService {
         }
     }
 
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        Person person = findPersonByEmail(username);
+        return new SecurityPerson(person);
+    }
+
+    public Person findPersonByEmail(String email) {
+        return personRepository.findByEmail(email).orElseThrow(
+                () -> new PersonNotFoundException(Constant.PERSON_NOT_FOUND));
+    }
 }
