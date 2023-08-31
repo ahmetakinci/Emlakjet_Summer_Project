@@ -22,6 +22,7 @@ import com.example.emlakjet_summer_project.converter.PersonConverter;
 @Service
 @RequiredArgsConstructor
 public class PersonService implements UserDetailsService {
+    private final CachePersonService cachePersonService;
     private final PersonRepository personRepository;
 
     private final BCryptPasswordEncoder passwordEncoder;
@@ -44,10 +45,12 @@ public class PersonService implements UserDetailsService {
                         Status.ACTIVE,
                         Role.USER);
         Person save = personRepository.save(person);
+        cachePersonService.cachePersonStatus(save);
         return personConverter.createPersonConverter(save);
 
     }
     public void deletePerson(String id){
+        cachePersonService.deleteCachePerson(findById(id).getId());
         personRepository.delete(findById(id));
     }
     protected Person findById(String id){

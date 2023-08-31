@@ -7,6 +7,7 @@ import com.example.emlakjet_summer_project.entitiy.enums.RoomNumber;
 import com.example.emlakjet_summer_project.entitiy.enums.Status;
 import com.example.emlakjet_summer_project.exception.AdvertNotFound;
 import com.example.emlakjet_summer_project.exception.Constant;
+import com.example.emlakjet_summer_project.exception.PersonNotActiveException;
 import com.example.emlakjet_summer_project.repository.AdvertRepository;
 import com.example.emlakjet_summer_project.request.CreateAdvertRequest;
 import com.example.emlakjet_summer_project.request.UpdateAdvertRequest;
@@ -14,6 +15,7 @@ import com.example.emlakjet_summer_project.response.CreateAdvertResponse;
 import com.example.emlakjet_summer_project.response.GetAdvertResponse;
 import com.example.emlakjet_summer_project.response.UpdateAdvertResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -21,12 +23,15 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class AdvertService {
+    private final CachePersonService cachePersonService;
     private final PersonService personService;
     private final AdvertRepository advertRepository;
     private final AdvertConverter advertConverter;
+    private final RabbitTemplate rabbitTemplate;
 
     public CreateAdvertResponse createAdvert(CreateAdvertRequest request){
         Advert advert = null;
+        if (cachePersonService.getCachePersonStatus(request.getPersonId())){
         if (request.getType().toString().equals(AdvertType.HOUSE.toString())){
             advert = new Advert(
                     request.getType(),
@@ -50,10 +55,18 @@ public class AdvertService {
                     request.getNetM(),
                     Status.ACTIVE, personService.findById(request.getPersonId()));
         }
-        return advertConverter.createAdvertConverter(advertRepository.save(advert));
+            return advertConverter.createAdvertConverter(advertRepository.save(advert));
+
+        }
+
+        else {
+            throw new PersonNotActiveException(Constant.PERSON_NOT_ACTIVE);
+        }
+
     }
     public UpdateAdvertResponse updateAdvert(UpdateAdvertRequest request){
         Advert advert = findById(request.getId());
+        if (cachePersonService.getCachePersonStatus(advert.getAdvertiser().getId())){
         advert.setType(request.getType());
         advert.setTitle(request.getTitle());
         advert.setDescription(request.getDescription());
@@ -61,19 +74,39 @@ public class AdvertService {
         advert.setGrossM(request.getGrossM());
         advert.setNetM(request.getNetM());
         advert.setRoomNumber(request.getRoomNumber());
-        return advertConverter.updateAdvertConverter(advertRepository.save(advert));
+            return advertConverter.updateAdvertConverter(advertRepository.save(advert));
+        }
+        else {
+            throw new PersonNotActiveException(Constant.PERSON_NOT_ACTIVE);
+        }
     }
     public UpdateAdvertResponse updateStatusAdvert(String id,Status status){
         Advert advert = findById(id);
+        if (cachePersonService.getCachePersonStatus(advert.getAdvertiser().getId())){
         advert.setStatus(status);
-        return advertConverter.updateAdvertConverter(advertRepository.save(advert));
+            advertRepository.save(advert);
+
+            rabbitTemplate.convertAndSend("advert_status_changes", "advert_" + id + "_changed_" + status);
+
+            return advertConverter.updateAdvertConverter(advert);
+        }
+        else {
+            throw new PersonNotActiveException(Constant.PERSON_NOT_ACTIVE);
+        }
     }
     public void deleteAdvert(String id){
-        advertRepository.delete(findById(id));
+        Advert advert = findById(id);
+        if (cachePersonService.getCachePersonStatus(advert.getAdvertiser().getId())){
+        advertRepository.delete(advert);
+        }
+        else {
+            throw new PersonNotActiveException(Constant.PERSON_NOT_ACTIVE);
+        }
     }
     public List<GetAdvertResponse> getAllAdvert(){
         List<Advert> adverts = advertRepository.findAll().stream().filter(
-                advert -> advert.getStatus().toString().equals(Status.ACTIVE.toString())).toList();
+                advert -> advert.getStatus().toString().equals(Status.ACTIVE.toString()) &&
+                        cachePersonService.getCachePersonStatus(advert.getAdvertiser().getId())).toList();
         return advertConverter.getAdvertConverter(adverts);
 
     }

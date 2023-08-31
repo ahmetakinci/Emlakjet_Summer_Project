@@ -9,5 +9,4 @@ public class LoginResponseConverter {
         return new LoginResponse(jwtToken,personId);
 
     }
-
 }

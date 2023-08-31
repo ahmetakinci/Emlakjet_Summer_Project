@@ -14,27 +14,27 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("api/adverts")
+@RequestMapping("/api/advert")
 public class AdvertController {
     private final AdvertService advertService;
 
     public AdvertController(AdvertService advertService) {
         this.advertService = advertService;
     }
-    @PostMapping
+    @PostMapping("/user/create")
     public ResponseEntity<CreateAdvertResponse> createAdvert(@RequestBody CreateAdvertRequest request){
         return new ResponseEntity<>(advertService.createAdvert(request), HttpStatus.CREATED);
     }
-    @PutMapping
+    @PutMapping("/user/update")
     public ResponseEntity<UpdateAdvertResponse> updateAdvert(@RequestBody UpdateAdvertRequest request){
         return new ResponseEntity<>(advertService.updateAdvert(request),HttpStatus.CREATED);
     }
-    @PatchMapping("/{id}/{status}")
+    @PatchMapping("/user/{id}/{status}")
     public ResponseEntity<UpdateAdvertResponse> updateStatusAdvert(@PathVariable("id") String id,
                                                                    @PathVariable("status") Status status){
         return new ResponseEntity<>(advertService.updateStatusAdvert(id, status),HttpStatus.CREATED);
     }
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/user/{id}/delete")
     public ResponseEntity<Void> deleteAdvert(@PathVariable("id")String id){
         advertService.deleteAdvert(id);
         return new ResponseEntity<>(HttpStatus.OK);
