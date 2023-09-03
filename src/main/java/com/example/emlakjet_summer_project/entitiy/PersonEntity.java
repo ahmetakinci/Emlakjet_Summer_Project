@@ -14,7 +14,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Person {
+public class PersonEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
@@ -39,9 +39,9 @@ public class Person {
     private Role role;
 
     @OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL,mappedBy = "advertiser")
-    private List<Advert> adverts;
+    private List<AdvertEntity> adverts;
 
-    public Person(String name, String surName, String email, String phoneNumber, String password,Status status,Role role) {
+    public PersonEntity(String name, String surName, String email, String phoneNumber, String password, Status status, Role role) {
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;

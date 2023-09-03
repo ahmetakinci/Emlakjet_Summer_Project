@@ -1,4 +1,4 @@
-package com.example.emlakjet_summer_project.exception;
+package com.example.emlakjet_summer_project.core.exception;
 
 import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpHeaders;

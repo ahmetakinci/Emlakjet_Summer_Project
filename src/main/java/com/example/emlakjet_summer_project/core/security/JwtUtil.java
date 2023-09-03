@@ -5,8 +5,8 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.interfaces.DecodedJWT;
 
-import com.example.emlakjet_summer_project.exception.Constant;
-import com.example.emlakjet_summer_project.exception.TokenNotValidException;
+import com.example.emlakjet_summer_project.core.exception.Constant;
+import com.example.emlakjet_summer_project.core.exception.TokenNotValidException;
 import org.springframework.beans.factory.annotation.Value;
 
 import org.springframework.security.core.Authentication;

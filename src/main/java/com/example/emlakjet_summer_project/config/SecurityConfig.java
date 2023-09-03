@@ -57,8 +57,7 @@ public class SecurityConfig {
         return (web) -> web.ignoring().
                 requestMatchers("/swagger-ui/**", "/v3/api-docs/**");
     }
-
-
+    
     //    <!---CORS--->
     private CorsConfigurationSource getCorsConfiguration() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

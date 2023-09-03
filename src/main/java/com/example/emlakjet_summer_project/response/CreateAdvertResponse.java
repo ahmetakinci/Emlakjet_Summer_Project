@@ -1,7 +1,7 @@
 package com.example.emlakjet_summer_project.response;
 
 import com.example.emlakjet_summer_project.entitiy.enums.AdvertType;
-import com.example.emlakjet_summer_project.entitiy.enums.RoomNumber;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,7 +20,7 @@ public class CreateAdvertResponse {
 
     private String price;
 
-    private RoomNumber roomNumber;
+    private String roomNumber;
 
     private String grossM;
 

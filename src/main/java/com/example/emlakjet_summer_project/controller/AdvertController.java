@@ -1,5 +1,6 @@
 package com.example.emlakjet_summer_project.controller;
 
+import com.example.emlakjet_summer_project.entitiy.enums.AdvertType;
 import com.example.emlakjet_summer_project.entitiy.enums.Status;
 import com.example.emlakjet_summer_project.request.CreateAdvertRequest;
 import com.example.emlakjet_summer_project.request.UpdateAdvertRequest;
@@ -42,5 +43,18 @@ public class AdvertController {
     @GetMapping
     public ResponseEntity<List<GetAdvertResponse>> getAllAdvert(){
         return new ResponseEntity<>(advertService.getAllAdvert(),HttpStatus.OK);
+    }
+    @GetMapping("/search/{query}")
+    public ResponseEntity<List<GetAdvertResponse>> search(@PathVariable String query){
+        return new ResponseEntity<>(advertService.search(query),HttpStatus.OK);
+    }
+    @GetMapping("/filter/{type}")
+    public ResponseEntity<List<GetAdvertResponse>> filterAdvertType(@PathVariable AdvertType type){
+        return new ResponseEntity<>(advertService.filterAdvertType(type),HttpStatus.OK);
+    }
+    @GetMapping("/filterBetweenPrice")
+    public ResponseEntity<List<GetAdvertResponse>> filterBetweenPrice(@RequestParam("minPrice") String minPrice,
+                                                                      @RequestParam("maxPrice") String maxPrice){
+        return new ResponseEntity<>(advertService.filterBetweenPrice(minPrice,maxPrice),HttpStatus.OK);
     }
 }

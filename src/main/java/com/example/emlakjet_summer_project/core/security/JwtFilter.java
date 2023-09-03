@@ -1,7 +1,6 @@
 package com.example.emlakjet_summer_project.core.security;
 
 
-import com.example.emlakjet_summer_project.entitiy.SecurityPerson;
 import com.example.emlakjet_summer_project.service.PersonService;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -17,6 +16,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+
 @Component
 public class JwtFilter extends OncePerRequestFilter {
 

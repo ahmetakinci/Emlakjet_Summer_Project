@@ -1,5 +1,6 @@
-package com.example.emlakjet_summer_project.entitiy;
+package com.example.emlakjet_summer_project.core.security;
 
+import com.example.emlakjet_summer_project.entitiy.PersonEntity;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,16 +10,16 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class SecurityPerson implements UserDetails {
-    private final Person person;
+    private final PersonEntity person;
 
-    public SecurityPerson(Person person) {
+    public SecurityPerson(PersonEntity person) {
         this.person = person;
     }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Stream.of(person.getRole())
-                .map(role-> new SimpleGrantedAuthority(role.name()))
+                .map(role -> new SimpleGrantedAuthority(role.name()))
                 .collect(Collectors.toList());
     }
 

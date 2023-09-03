@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-public class Advert {
+public class AdvertEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
@@ -38,12 +38,12 @@ public class Advert {
 
     @JoinColumn
     @ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.MERGE)
-    private Person advertiser;
+    private PersonEntity advertiser;
 
-    public Advert(AdvertType type, String title,
-                  String description, String price,
-                  RoomNumber roomNumber, String grossM,
-                  String netM, Status status, Person person) {
+    public AdvertEntity(AdvertType type, String title,
+                        String description, String price,
+                        RoomNumber roomNumber, String grossM,
+                        String netM, Status status, PersonEntity person) {
         this.type = type;
         this.title = title;
         this.description = description;

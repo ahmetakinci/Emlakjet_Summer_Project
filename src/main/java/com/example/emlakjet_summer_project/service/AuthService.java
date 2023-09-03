@@ -5,6 +5,7 @@ import com.example.emlakjet_summer_project.core.security.JwtUtil;
 import com.example.emlakjet_summer_project.request.LoginRequest;
 import com.example.emlakjet_summer_project.response.LoginResponse;
 import lombok.RequiredArgsConstructor;
+
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,15 +23,13 @@ public class AuthService {
     private final LoginResponseConverter converter;
 
 
-
-    public LoginResponse login(LoginRequest request){
+    public LoginResponse login(LoginRequest request) {
         UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken
                 (request.getEmail(),
                         request.getPassword());
         Authentication authenticate = authenticationManager.authenticate(token);
-        System.out.println(authenticate.getName());
-        String personId= personService.findPersonByEmail(authenticate.getName()).getId();
 
-        return converter.convert(jwtUtil.generateToken(authenticate),personId);
+        String personId = personService.findPersonByEmail(authenticate.getName()).getId();
+        return converter.convert(jwtUtil.generateToken(authenticate), personId);
     }
 }

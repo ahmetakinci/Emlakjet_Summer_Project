@@ -1,9 +1,9 @@
-package com.example.emlakjet_summer_project.config;
+package com.example.emlakjet_summer_project.listener;
 
-import com.example.emlakjet_summer_project.entitiy.Advert;
+import com.example.emlakjet_summer_project.entitiy.AdvertEntity;
 import com.example.emlakjet_summer_project.entitiy.enums.Status;
-import com.example.emlakjet_summer_project.exception.AdvertNotFound;
-import com.example.emlakjet_summer_project.exception.Constant;
+import com.example.emlakjet_summer_project.core.exception.AdvertNotFound;
+import com.example.emlakjet_summer_project.core.exception.Constant;
 import com.example.emlakjet_summer_project.repository.AdvertRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -15,9 +15,9 @@ public class RabbitStatusChangeWorker {
     private final AdvertRepository advertRepository;
 
     @RabbitListener(queues = "advert_status_changes")
-    public void processAdStatusChangeMessage(String message) {
+    public void AdvertStatusChangeMessage(String message) {
         String[] parts = message.split("_");
-        String adId = parts[1];
+        String advertId = parts[1];
         Status newStatus = Status.valueOf(parts[3]);
 
         try {
@@ -26,11 +26,12 @@ public class RabbitStatusChangeWorker {
             e.printStackTrace();
         }
 
-        Advert advert = findById(adId);
+        AdvertEntity advert = findById(advertId);
         advert.setStatus(newStatus);
         advertRepository.save(advert);
     }
-    private Advert findById(String id){
+
+    private AdvertEntity findById(String id) {
         return advertRepository.findById(id).orElseThrow(
                 () -> new AdvertNotFound(Constant.ADVERT_NOT_FOUND));
 

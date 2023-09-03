@@ -1,7 +1,7 @@
 package com.example.emlakjet_summer_project.converter;
 
 
-import com.example.emlakjet_summer_project.entitiy.Person;
+import com.example.emlakjet_summer_project.entitiy.PersonEntity;
 import com.example.emlakjet_summer_project.response.CreatePersonResponse;
 import com.example.emlakjet_summer_project.response.GetPersonResponse;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 public class PersonConverter {
 
 
-    public CreatePersonResponse createPersonConverter(Person person) {
+    public CreatePersonResponse createPersonConverter(PersonEntity person) {
         CreatePersonResponse createPersonResponse = new CreatePersonResponse(
                 person.getId(),
                 person.getName(),
@@ -23,7 +23,7 @@ public class PersonConverter {
                 person.getStatus());
         return createPersonResponse;
     }
-    public GetPersonResponse getPersonConverter(Person person){
+    public GetPersonResponse getPersonConverter(PersonEntity person){
         GetPersonResponse getPersonResponse = new GetPersonResponse(
                 person.getId(),
                 person.getName(),
