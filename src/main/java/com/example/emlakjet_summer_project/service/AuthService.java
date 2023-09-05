@@ -18,6 +18,7 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
     private final PersonService personService;
+
     private final JwtUtil jwtUtil;
 
     private final LoginResponseConverter converter;

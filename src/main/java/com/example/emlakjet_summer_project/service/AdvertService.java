@@ -64,7 +64,6 @@ public class AdvertService {
         } else {
             throw new PersonNotActiveException(Constant.PERSON_NOT_ACTIVE);
         }
-
     }
 
     public UpdateAdvertResponse updateAdvert(UpdateAdvertRequest request) {
